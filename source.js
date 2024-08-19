@@ -4,6 +4,8 @@
 const rock = document.querySelector(".rock");
 const paper = document.querySelector(".paper");
 const scissors = document.querySelector(".scissors");
+const results = document.querySelector(".round-result");
+const score = document.querySelector(".score");
 
 // Random computer choice
 const getComputerChoice = function (choices) {
@@ -16,57 +18,70 @@ const choices = ["rock", "paper", "scissors"];
 // Scores
 let computerScore = 0;
 let humanScore = 0;
+let scoreText = `\nYour score: ${humanScore}\nComputer score: ${computerScore}`;
 
 // Event Listeners
 rock.addEventListener("click", function (e) {
-  console.log("Rock");
   playRound("rock", getComputerChoice);
 });
 
 paper.addEventListener("click", function (e) {
-  console.log("Paper");
   playRound("paper", getComputerChoice);
 });
 
 scissors.addEventListener("click", function (e) {
-  console.log("Scissors");
   playRound("scissors", getComputerChoice);
 });
+
+const winner = function (winner, loser) {
+  const winningMessage = `You win! ${
+    winner.charAt(0).toUpperCase() + winner.slice(1)
+  } beats ${loser}`;
+  results.textContent = winningMessage;
+  results.style.color = "green";
+  humanScore++;
+  score.textContent = `User score: ${humanScore}  Computer score: ${computerScore}`;
+};
+
+const isGameOver = function () {
+  if (humanScore === 5 || computerScore === 5) {
+    if (humanScore > computerScore) {
+      results.textContent = `You win!! The final score was ${humanScore} to ${computerScore}`;
+      results.style.color = "green";
+    } else {
+      results.textContent = `You lose!! The final score was ${humanScore} to ${computerScore}`;
+      results.style.color = "red";
+    }
+    humanScore = 0;
+    computerScore = 0;
+    score.textContent = ``;
+  }
+};
 
 // Game logic
 const playRound = function (humanChoice, computerChoice) {
   const pcChoice = computerChoice(choices);
   const userChoice = humanChoice;
-  const winningMessage = `You win! ${
-    userChoice.charAt(0).toUpperCase() + userChoice.slice(1)
-  } beats ${pcChoice}`;
+
   if (userChoice === pcChoice) {
-    console.log("draw");
+    results.textContent = "Draw";
+    results.style.color = "grey";
   } else if (userChoice === "rock" && pcChoice === "scissors") {
-    console.log(winningMessage);
-    humanScore++;
+    winner(userChoice, pcChoice);
+    isGameOver();
   } else if (userChoice === "paper" && pcChoice === "rock") {
-    console.log(winningMessage);
-    humanScore++;
+    winner(userChoice, pcChoice);
+    isGameOver();
   } else if (userChoice === "scissors" && pcChoice === "paper") {
-    console.log(winningMessage);
-    humanScore++;
+    winner(userChoice, pcChoice);
+    isGameOver();
   } else {
-    console.log(
-      `You lose! ${
-        pcChoice.charAt(0).toUpperCase() + pcChoice.slice(1)
-      } beats ${userChoice}`
-    );
+    results.textContent = `You lose! ${
+      pcChoice.charAt(0).toUpperCase() + pcChoice.slice(1)
+    } beats ${userChoice}`;
+    results.style.color = "red";
     computerScore++;
+    gameOver();
+    score.textContent = `\nYour score: ${humanScore}\nComputer score: ${computerScore}`;
   }
 };
-
-const finalScore = `\nYour score: ${humanScore}\nComputer score: ${computerScore}`;
-
-if (humanScore > computerScore) {
-  console.log(`You win! ${finalScore}`);
-} else if (computerScore > humanScore) {
-  console.log(`You lose! ${finalScore}`);
-} else {
-  console.log(`It's a draw! ${finalScore}`);
-}
