@@ -1,3 +1,15 @@
+"use strict";
+
+// Selectors
+const rock = document.querySelector(".rock");
+const paper = document.querySelector(".paper");
+const scissors = document.querySelector(".scissors");
+
+// Random computer choice
+const getComputerChoice = function (choices) {
+  return choices[Math.trunc(Math.random() * 3)];
+};
+
 // Game options
 const choices = ["rock", "paper", "scissors"];
 
@@ -5,47 +17,49 @@ const choices = ["rock", "paper", "scissors"];
 let computerScore = 0;
 let humanScore = 0;
 
-const getComputerChoice = function (choices) {
-  return choices[Math.trunc(Math.random() * 3)];
-};
+// Event Listeners
+rock.addEventListener("click", function (e) {
+  console.log("Rock");
+  playRound("rock", getComputerChoice);
+});
 
-// Need to add ability to check for inputs out of range
-const getHumanChoice = function (choices) {
-  const userChoice = Number(
-    prompt("Enter 0 for rock...1 for paper...2 for scissors")
-  );
-  return choices[userChoice];
-};
+paper.addEventListener("click", function (e) {
+  console.log("Paper");
+  playRound("paper", getComputerChoice);
+});
 
-const playGame = function () {
-  let round = 1;
-  const playRound = function (humanChoice, computerChoice) {
-    const pcChoice = computerChoice(choices);
-    const userChoice = humanChoice(choices);
-    const winningMessage = `You win! ${userChoice} beats ${pcChoice}`;
-    if (userChoice === pcChoice) {
-      console.log("draw");
-    } else if (userChoice === "rock" && pcChoice === "scissors") {
-      console.log(winningMessage);
-      humanScore++;
-    } else if (userChoice === "paper" && pcChoice === "rock") {
-      console.log(winningMessage);
-      humanScore++;
-    } else if (userChoice === "scissors" && pcChoice === "rock") {
-      console.log(winningMessage);
-      humanScore++;
-    } else {
-      console.log(`You lose! ${pcChoice} beats ${userChoice}`);
-      computerScore++;
-    }
-  };
-  while (round <= 5) {
-    playRound(getHumanChoice, getComputerChoice);
-    round++;
+scissors.addEventListener("click", function (e) {
+  console.log("Scissors");
+  playRound("scissors", getComputerChoice);
+});
+
+// Game logic
+const playRound = function (humanChoice, computerChoice) {
+  const pcChoice = computerChoice(choices);
+  const userChoice = humanChoice;
+  const winningMessage = `You win! ${
+    userChoice.charAt(0).toUpperCase() + userChoice.slice(1)
+  } beats ${pcChoice}`;
+  if (userChoice === pcChoice) {
+    console.log("draw");
+  } else if (userChoice === "rock" && pcChoice === "scissors") {
+    console.log(winningMessage);
+    humanScore++;
+  } else if (userChoice === "paper" && pcChoice === "rock") {
+    console.log(winningMessage);
+    humanScore++;
+  } else if (userChoice === "scissors" && pcChoice === "paper") {
+    console.log(winningMessage);
+    humanScore++;
+  } else {
+    console.log(
+      `You lose! ${
+        pcChoice.charAt(0).toUpperCase() + pcChoice.slice(1)
+      } beats ${userChoice}`
+    );
+    computerScore++;
   }
 };
-
-playGame();
 
 const finalScore = `\nYour score: ${humanScore}\nComputer score: ${computerScore}`;
 
